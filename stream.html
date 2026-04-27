@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Stream</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: #1a1a2e;
+            font-family: system-ui, -apple-system, sans-serif;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #eee;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .stream-container {
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .stream-container img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .status {
+            color: #888;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+
+        .status::before {
+            content: "";
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        .controls {
+            margin-top: 20px;
+            color: #ccc;
+            text-align: center;
+        }
+
+        .key {
+            display: inline-block;
+            padding: 10px 14px;
+            margin: 5px;
+            border-radius: 6px;
+            background: #2a2a40;
+            transition: 0.1s;
+        }
+
+        .active {
+            background: #4ade80;
+            color: #000;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+    </style>
+</head>
+<body>
+    <h1>📹 Live Stream</h1>
+    
+    <div class="stream-container">
+        <img 
+            src="http://10.0.2.106:81/stream" 
+            alt="Live Stream"
+            onerror="this.style.display='none'; document.getElementById('error').style.display='block';"
+        >
+        <div id="error" style="display:none; padding:40px; color:#f87171; text-align:center;">
+            Stream nicht verfügbar.<br>
+            <small style="color:#888;">Prüfe, ob die Kamera läuft und die URL erreichbar ist.</small>
+        </div>
+    </div>
+    
+    <p class="status">Live</p>
+
+    <div class="controls">
+        <div>
+            <span class="key" id="w">W</span>
+        </div>
+        <div>
+            <span class="key" id="a">A</span>
+            <span class="key" id="s">S</span>
+            <span class="key" id="d">D</span>
+        </div>
+    </div>
+
+<script>
+const keys = ["w","a","s","d"];
+
+document.addEventListener("keydown", function(event) {
+    let key = event.key.toLowerCase();
+
+    if (keys.includes(key)) {
+        fetch(`/move?dir=${key}`);
+        document.getElementById(key).classList.add("active");
+    }
+});
+
+document.addEventListener("keyup", function(event) {
+    let key = event.key.toLowerCase();
+
+    if (keys.includes(key)) {
+        fetch(`/move?dir=stop`);
+        document.getElementById(key).classList.remove("active");
+    }
+});
+</script>
+
+</body>
+</html>
