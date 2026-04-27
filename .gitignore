@@ -1,5 +1,10 @@
+# Secrets
 config.h
+
+# Arduino build files
 *.bin
 *.elf
+
+# System files
 .DS_Store
 Thumbs.db
