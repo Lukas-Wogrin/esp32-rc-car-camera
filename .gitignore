@@ -1,0 +1,5 @@
+config.h
+*.bin
+*.elf
+.DS_Store
+Thumbs.db
